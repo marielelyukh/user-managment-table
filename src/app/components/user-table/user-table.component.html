@@ -1,0 +1,107 @@
+<div class="user-table-container">
+  <div class="filters-section">
+    <nz-input-group [nzSuffix]="searchQuery ? suffixIconClear : suffixIconSearch" class="search-input">
+      <input
+        type="text"
+        nz-input
+        [nzBorderless]="false"
+        placeholder="Search by name, phone, or date..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange($event)"
+      />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+    <ng-template #suffixIconClear>
+      <span nz-icon nzType="close-circle" (click)="clearSearch()" class="clear-icon"></span>
+    </ng-template>
+
+    <div class="filter-controls">
+      <nz-select
+        [(ngModel)]="activeFilter"
+        (ngModelChange)="onActiveFilterChange($event)"
+        class="filter-select"
+        nzPlaceHolder="Filter by status"
+        [nzBorderless]="false"
+      >
+        <nz-option [nzValue]="ActiveFilter.All" nzLabel="All"></nz-option>
+        <nz-option [nzValue]="ActiveFilter.Active" nzLabel="Active"></nz-option>
+        <nz-option [nzValue]="ActiveFilter.Inactive" nzLabel="Inactive"></nz-option>
+      </nz-select>
+
+      <nz-select
+        [(ngModel)]="ageFilter"
+        (ngModelChange)="onAgeFilterChange($event)"
+        class="filter-select"
+        nzPlaceHolder="Filter by age"
+        [nzBorderless]="false"
+      >
+        <nz-option [nzValue]="AgeFilter.All" nzLabel="All"></nz-option>
+        <nz-option [nzValue]="AgeFilter.Under18" nzLabel="< 18 years old"></nz-option>
+        <nz-option [nzValue]="AgeFilter.Over18" nzLabel="> 18 years old"></nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <div class="table-wrapper" (scroll)="onScroll($event)" [class.loading]="loadingMore && initialized">
+    <nz-spin [nzSpinning]="loading && !initialized">
+      <nz-table
+        [nzData]="displayedUsers"
+        [nzPageSize]="pageSize"
+        [nzShowPagination]="false"
+        [nzFrontPagination]="false"
+        nzSize="middle"
+      >
+        <thead>
+          <tr>
+            <th
+              nzColumnKey="firstName"
+              (nzSortOrderChange)="onSort(SortField.FirstName)"
+              [nzSortFn]="true"
+              [nzSortOrder]="sortField === SortField.FirstName ? (sortOrder === SortOrder.Asc ? 'ascend' : 'descend') : null"
+            >
+              First Name
+            </th>
+            <th
+              nzColumnKey="lastName"
+              (nzSortOrderChange)="onSort(SortField.LastName)"
+              [nzSortFn]="true"
+              [nzSortOrder]="sortField === SortField.LastName ? (sortOrder === SortOrder.Asc ? 'ascend' : 'descend') : null"
+            >
+              Last Name
+            </th>
+            <th
+              nzColumnKey="dateOfBirth"
+              (nzSortOrderChange)="onSort(SortField.DateOfBirth)"
+              [nzSortFn]="true"
+              [nzSortOrder]="sortField === SortField.DateOfBirth ? (sortOrder === SortOrder.Asc ? 'ascend' : 'descend') : null"
+            >
+              Date of Birth
+            </th>
+            <th>Phone Number</th>
+            <th>Active</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of displayedUsers">
+            <td [innerHTML]="getHighlightedText((user.firstName | truncate: 15))"></td>
+            <td [innerHTML]="getHighlightedText((user.lastName | truncate: 15))"></td>
+            <td [innerHTML]="getHighlightedText((getFormattedDate(user.dateOfBirth) | truncate: 20))"></td>
+            <td [innerHTML]="getHighlightedText((user.phoneNumber | truncate: 15))"></td>
+            <td>
+              <nz-tag [nzColor]="user.active ? 'green' : 'red'">
+                {{ user.active ? 'Active' : 'Inactive' }}
+              </nz-tag>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+      <div *ngIf="!hasMoreData && initialized && displayedUsers.length > 0 && !loadingMore" class="end-message">
+        No more users to load
+      </div>
+    </nz-spin>
+  </div>
+</div>
+
+

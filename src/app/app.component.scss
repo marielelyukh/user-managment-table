@@ -1,0 +1,27 @@
+.app-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #534CA4;
+
+  @media (max-width: 768px) {
+    margin-bottom: 16px;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+}
+

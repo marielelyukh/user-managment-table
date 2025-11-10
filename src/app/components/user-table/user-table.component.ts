@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -36,7 +36,6 @@ import { TruncatePipe } from '../../pipes/truncate.pipe';
 })
 export class UserTableComponent implements OnInit, OnDestroy {
   private readonly userDataService = inject(UserDataService);
-  private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroy$ = new Subject<void>();
   private readonly searchSubject$ = new Subject<string>();
   private readonly scrollSubject$ = new Subject<Event>();
@@ -88,13 +87,11 @@ export class UserTableComponent implements OnInit, OnDestroy {
       catchError((error: Error | DOMException) => {
         this.loading = false;
         this.initialized = true;
-        this.cdr.markForCheck();
         return EMPTY;
       }),
       finalize(() => {
         this.loading = false;
         this.initialized = true;
-        this.cdr.markForCheck();
       }),
       takeUntil(this.destroy$)
     ).subscribe();
@@ -131,7 +128,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
       }),
       finalize(() => {
         this.loadingMore = false;
-        this.cdr.markForCheck();
       })
     );
   }
@@ -193,7 +189,6 @@ export class UserTableComponent implements OnInit, OnDestroy {
 
     this.filteredUsers = result;
     this.displayedUsers = result;
-    this.cdr.markForCheck();
   }
 
   private applySearchFilter(users: User[]): User[] {

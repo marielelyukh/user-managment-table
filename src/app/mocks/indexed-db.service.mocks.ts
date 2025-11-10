@@ -13,7 +13,7 @@ export const mockUserResponse: UserResponse[] = [
     id: '2',
     first_name: 'Jane',
     last_name: 'Smith',
-    date_of_birth: '1999-09-09',
+    date_of_birth: '2010-09-09',
     phone_number: '+0987654321',
     active: false
   },
